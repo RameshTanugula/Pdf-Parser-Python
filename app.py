@@ -1,9 +1,12 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS, cross_origin
 import pdfplumber
 import json
 
 app = Flask(__name__)
-
+app.config['SECRET_KEY'] = '1'
+app.config['CORS_HEADERS'] = 'Content-Type'
+cors = CORS(app, resources={r"/foo": {"origins": "http://localhost:port"}})
 # Replace 'your_pdf_file.pdf' with the path to your PDF file
 # pdf_path = './tt.pdf'
 
@@ -16,7 +19,8 @@ def extract_tables_from_pdf(pdf_path):
             tables.extend(table)
         return tables
 
-@app.route('/extract_tables', methods=['POST'])
+@app.route('/extract/pdf', methods=['POST'])
+@cross_origin(origin='localhost',headers=['Content- Type','Authorization'])
 def extract_tables_api():
     try:
         # Assuming the PDF file is sent in the request as a file
